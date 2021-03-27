@@ -12,8 +12,8 @@ script:
 after_success:
   - docker build -t abhibajaj/multi-client ./client
   - docker build -t abhibajaj/multi-nginx ./nginx
-  - docker build abhibajaj/multi-server ./server
-  - docker build abhibajaj/multi-worker ./worker
+  - docker build -t abhibajaj/multi-server ./server
+  - docker build -t abhibajaj/multi-worker ./worker
   # Log in to the docker CLI
 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
