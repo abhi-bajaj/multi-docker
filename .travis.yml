@@ -1,0 +1,25 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t abhibajaj/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true abhibajaj/react-test yarn test
+
+after_success:
+  - docker build -t abhibajaj/multi-client ./client
+  - docker build -t abhibajaj/multi-nginx ./nginx
+  - docker build abhibajaj/multi-server ./server
+  - docker build abhibajaj/multi-worker ./worker
+  # Log in to the docker CLI
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # Push images to docker hub
+  - docker push abhibajaj/multi-client
+  - docker push abhibajaj/multi-nginx
+  - docker push abhibajaj/multi-server
+  - docker push abhibajaj/multi-worker
